@@ -6,10 +6,10 @@ var express  = require('express'),
 
 
 /*Set EJS template Engine*/
-app.set('views','./views');
+app.set('views','./public/views');
 app.set('view engine','ejs');
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/views')));
 app.use(bodyParser.urlencoded({ extended: true })); //support x-www-form-urlencoded
 app.use(bodyParser.json());
 app.use(expressValidator());
@@ -227,7 +227,7 @@ curut2.delete(function(req,res,next){
 app.use('/api', router);
 
 //start Server
-var server = app.listen(3000,function(){
+var server = app.listen(8080,function(){
 
    console.log("Listening to port %s",server.address().port);
 
