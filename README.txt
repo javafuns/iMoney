@@ -4,7 +4,7 @@ After clone the source, run:
 
 
 How to build docker image in google cloud shell:
-1. git clone your_project
+1. git clone https://github.com/javafuns/iMoney.git
 2. npm install express socket.io --save
 3. docker build -t "gcr.io/guangquanzhang/imoney" .
 4. gcloud docker -- push gcr.io/guangquanzhang/imoney
