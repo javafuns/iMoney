@@ -26,6 +26,7 @@
     "ejs": "^1.0.0",
     "express-myconnection": "*",
     "express-validator": "^2.6.0",
-    "mysql": "*"
+    "mysql": "*",
+    "chart.js": "*"
   }
 }
