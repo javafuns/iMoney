@@ -1,7 +1,8 @@
 FROM node:4
 EXPOSE 8080
 COPY costmanager.js .
-COPY public/ ./
+RUN mkdir public
+COPY public/* public
 RUN npm install --save google-cloud
 RUN npm install --save express
 #RUN npm install --save socket.io
