@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%=title%></title>
+        <script type="text/javascript" src="/../js/jquery-1.10.2.min.js"></script>
+        <link rel="stylesheet" href="/../css/style.css">
+    </head>
+<body>
+<form method="post" action="" id="the-form">
+    <table cellpadding="11">
+    <tr>
+        <td class="label">Date</td><td>: <input type="text" name="date" value="<%=data[0].date%>"></td>
+     </tr>
+    <tr>
+        <td class="label">Type</td><td>: <input type="text" name="type" value="<%=data[0].type%>"></td>
+     </tr>
+      <tr>
+        <td class="label">Cost</td><td>: <input type="text" name="cost" value="<%=data[0].cost%>"></td>
+     </tr>
+     <tr>
+        <td class="label"></td>
+        <td>
+            &nbsp; <input type="button" value="Save" onClick="saveRecord()">
+        </td>
+     </tr>
+    </table>
+</form>
+ <script>
+    
+        function saveRecord(){
+           
+           $.ajax({
+            
+            url:"/api/costRecord/"+<%=data[0].record_id%>,
+            type:"put",
+            data:$("#the-form").serialize(),
+            success:function(res){
+                
+                window.location.href = '/api/costRecord';
+                return false;
+            },
+            error:function(xhr, status, error){
+                
+                console.log(xhr.responseText);
+                var err = '';
+                $.each(JSON.parse(xhr.responseText) , function(i, item) {
+                   
+                     err +='<li>'+item.msg+'</li>';
+                });
+                $(".err-area").html(err);    
+                return false;
+            }
+            
+           });
+        }
+    
+    </script>
+</body>
+</html>
