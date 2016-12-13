@@ -4,7 +4,14 @@ COPY costmanager.js .
 COPY server.js .
 COPY package.json .
 RUN mkdir public
-COPY public/* public
+COPY public/index.html public
+RUN mkdir public/views
+COPY public/views/costRecord.ejs public/views
+COPY public/views/edit.ejs public/views
+RUN mkdir public/views/css
+RUN mkdir public/views/js
+COPY public/views/css/* public/views/css/
+COPY public/views/js/* public/views/js/
 RUN npm install --save google-cloud
 RUN npm install --save express
 RUN npm install --save
