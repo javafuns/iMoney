@@ -51,6 +51,24 @@ router.use(function(req, res, next) {
     next();
 });
 
+var analytics = router.route('/listCostPerMonth');
+analytics.get(function(req, res, next) {
+    req.getConnection(function(err,conn){
+        //if (err) return next("Cannot Connect");
+        /*var query = conn.query('SELECT * FROM t_costRecord',function(err,rows){
+            if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+            }
+        */
+            //res.writeHead('content-type','text/plain');
+            //res.setHeader('Content-Type', 'application/json');
+            //res.send(JSON.stringify({ a: 1 }));
+            res.status(200).send("12,19,3,5,2,3,5,3,7,2,11,9");
+         //});
+    });
+});
+
 var curut = router.route('/costRecord');
 
 
