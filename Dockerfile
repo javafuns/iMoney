@@ -1,11 +1,11 @@
 FROM node:4
 EXPOSE 8080
-COPY costmanager.js .
+#COPY costmanager.js .
 COPY server.js .
 COPY package.json .
 RUN mkdir public
-COPY public/index.html public
 RUN mkdir public/views
+COPY public/views/* public/views/
 COPY public/views/costRecord.ejs public/views
 COPY public/views/edit.ejs public/views
 RUN mkdir public/views/css
