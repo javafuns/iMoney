@@ -54,6 +54,14 @@ router.use(function(req, res, next) {
 var analytics = router.route('/listCostPerMonth');
 analytics.get(function(req, res, next) {
     req.getConnection(function(err,conn){
+        var year = "2016";
+        // /listCostPerMonth/?year=2016
+        var yearPair = req.url.split("?");
+        if (yearPair != null && yearPair[1] != null && yearPair[1].trim() != "") {
+          var yearValues = yearPair[1].trim().split("=");
+          if (yearValues != null && yearValues[1] != null && yearValues[1].trim() != "") year = yearValues[1];
+        }
+        console.log("year = " + year);
         //if (err) return next("Cannot Connect");
         /*var query = conn.query('SELECT * FROM t_costRecord',function(err,rows){
             if(err){
