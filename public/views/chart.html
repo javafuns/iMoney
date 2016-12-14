@@ -91,7 +91,18 @@
     Price : <input id="price" type="text" value="" readonly="readOnly" disabled/>
     <input type="button" value="Click me" tabindex="2" onclick="getStockPrice()"/>
   </div>
-  <div style="margin-top: 30px; margin-left: 50px; margin-right: 50px; font-size: 15px;">Be patient, loading data and paint ......</div>
+  <div style="margin-top: 30px; margin-left: 50px; margin-right: 50px; font-size: 15px;">
+    Year-<select name="year" id="year">  
+      <option value="2010">2010</option>  
+      <option value="2011">2011</option>  
+      <option value="2012">2012</option>  
+      <option value="2013">2013</option>  
+      <option value="2014">2014</option>  
+      <option value="2015">2015</option>  
+      <option value="2016" selected="selected">2016</option>  
+    </select> 
+    Be patient, loading data and paint ......
+  </div>
   <div id="tabContainer">
     <ul>
       <li id="tab1"><a href="" class="on" onclick="switchTab('tab1','div1');this.blur();clickTab('1', 'bar');return false;">Bar</a></li>
@@ -116,7 +127,9 @@ window.onload = clickTab('1', "bar");
 function clickTab(index, ct) {
   var url = window.location.href;
   var domainName = url.split("/");
-  var newURL = "/api/listCostPerMonth";
+  var yearElement = document.getElementById("year");
+  var year = yearElement.options[yearElement.selectedIndex].value;
+  var newURL = "/api/listCostPerMonth?year=" + year;
   var xmlHttp = new XMLHttpRequest();
 
   xmlHttp.onreadystatechange = function() { 
