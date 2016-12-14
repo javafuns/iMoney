@@ -9,18 +9,25 @@
 <form method="post" action="" id="the-form">
     <table cellpadding="11">
     <tr>
-        <td class="label">Date</td><td>: <input type="text" name="date" value="<%=data[0].date%>"></td>
+        <td class="label">Date</td><td>: <input type="date" name="date" value="<%=data[0].date%>"></td>
      </tr>
     <tr>
-        <td class="label">Type</td><td>: <input type="text" name="type" value="<%=data[0].type%>"></td>
+        <td class="label">Type</td><td>: <select id="type" name="type" selected="<%=data[0].type%>">
+          <option value="food" selected="<%=data[0].type%>"=="food">Food</option>
+          <option value="clothes" selected="<%=data[0].type%>"=="clothes">Clothes</option>
+          <option value="traffic" selected="<%=data[0].type%>"=="traffic">Traffic</option>
+          <option value="entertainment" selected="<%=data[0].type%>"=="entertainment">Entertainment</option>
+          <option value="travel" selected="<%=data[0].type%>"=="travel">Travel</option>
+         </select></td>
      </tr>
-      <tr>
-        <td class="label">Cost</td><td>: <input type="text" name="cost" value="<%=data[0].cost%>"></td>
+     <tr>
+        <td class="label">Cost</td><td>: <input type="number" name="cost" value="<%=data[0].cost%>"></td>
      </tr>
      <tr>
         <td class="label"></td>
         <td>
             &nbsp; <input type="button" value="Save" onClick="saveRecord()">
+            <input type="reset">
         </td>
      </tr>
     </table>
