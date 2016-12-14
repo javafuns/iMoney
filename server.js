@@ -21,9 +21,9 @@ var connection  = require('express-myconnection'),
 app.use(
 
     connection(mysql,{
-        host     : '104.155.152.73',
+        host     : 'localhost',
         user     : 'root',
-        password : 'imoney',
+        password : 'root',
         database : 'imoney',
         debug    : false //set true if you wanna see debug logger
     },'request')
@@ -61,19 +61,21 @@ analytics.get(function(req, res, next) {
           var yearValues = yearPair[1].trim().split("=");
           if (yearValues != null && yearValues[1] != null && yearValues[1].trim() != "") year = yearValues[1];
         }
-        console.log("year = " + year);
-        //if (err) return next("Cannot Connect");
-        /*var query = conn.query('SELECT * FROM t_costRecord',function(err,rows){
+
+        if (err) return next("Cannot Connect");
+        var query = conn.query("SELECT SUM(cost) as costpermonth, MONTH(date) as month FROM t_costRecord WHERE YEAR(date) = " + year + " GROUP BY MONTH(date)",function(err,rows){
             if(err){
                 console.log(err);
                 return next("Mysql error, check your query");
             }
-        */
-            //res.writeHead('content-type','text/plain');
-            //res.setHeader('Content-Type', 'application/json');
-            //res.send(JSON.stringify({ a: 1 }));
-            res.status(200).send("12,19,3,5,2,3,5,3,7,2,11,9");
-         //});
+
+            var monthlyCost = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            for (var i = 0; i < rows.length; i++) {
+              monthlyCost[rows[i].month-1] = rows[i].costpermonth;
+            }
+            console.log("Getting " + year + ": " + monthlyCost.join());
+            res.status(200).send(monthlyCost.join());
+         });
     });
 });
 
