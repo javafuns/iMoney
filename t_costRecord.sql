@@ -28,9 +28,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `t_costRecord` (
   `record_id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` varchar(100) NOT NULL,
+  `date` Date NOT NULL,
   `type` varchar(100) NOT NULL,
-  `cost` varchar(100) NOT NULL,
+  `cost` Float unsigned NOT NULL,
   PRIMARY KEY (`record_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
