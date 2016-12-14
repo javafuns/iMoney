@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `t_costRecord` (
   `record_id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` Date NOT NULL,
+  `date` varchar(100) NOT NULL,
   `type` varchar(100) NOT NULL,
   `cost` Float unsigned NOT NULL,
   PRIMARY KEY (`record_id`)
