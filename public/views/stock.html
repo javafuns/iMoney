@@ -1,295 +1,71 @@
 <!doctype html>
 <html>
   <head>
-    <title>iMoney - Monthly Analytics</title>
+    <title>iMoney - Stock Inquiry</title>
     <style>
-      #chartdiv {
-        width : 100%;
+      #stockdiv {
+        width : 90%;
         height  : 500px;
       }
     </style>
-
-    <!-- Resources -->
-    <script src="js/stock/amcharts.js"></script>
-    <script src="js/stock/serial.js"></script>
-    <script src="js/stock/amstock.js"></script>
-    <script src="js/stock/dataloader.min.js"></script>
-    <script src="js/stock/export.min.js"></script>
-    <script src="js/stock/light.js"></script>
-    <link rel="stylesheet" href="css/stock/export.css" type="text/css" media="all" />
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
 </head>
 
 <body>
-  <!-- Chart code -->
-  <script>
-    var chart = AmCharts.makeChart( "chartdiv", {
-      "type": "stock",
-      "theme": "light",
+<script type="text/javascript">
+  function getData() {
+    var url = "http://query.yahooapis.com/v1/public/yql";
+    var symbol = $("#symbol").val();
+    var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
 
-      //"color": "#fff",
-      "dataSets": [ {
-        "title": "AAPL",
-        "fieldMappings": [ {
-          "fromField": "Open",
-          "toField": "open"
-          }, {
-          "fromField": "High",
-          "toField": "high"
-          }, {
-          "fromField": "Low",
-          "toField": "low"
-          }, {
-          "fromField": "Close",
-          "toField": "close"
-          }, {
-          "fromField": "Volume",
-          "toField": "volume"
-        } ],
-        "compared": false,
-        "categoryField": "Date",
+    $.getJSON(url, 'q=' + data + "&format=json&diagnostics=true&env=http://datatables.org/alltables.env")
+      .done(function (data) {
+          $("#name").text("Bid Price: " + data.query.results.quote.Symbol);
+          $("#date").text("Bid Price: " + data.query.results.quote.Date);
+          $("#time").text("Bid Price: " + data.query.results.quote.LastTradeTime);
+          $("#result").text("Bid Price: " + data.query.results.quote.LastTradePriceOnly);
+          $("#chg").text("Bid Price: " + data.query.results.quote.PercentChange);
+          $("#bid").text("Bid Price: " + data.query.results.quote.LastTradePriceOnly);
+          $("#ask").text("Bid Price: " + data.query.results.quote.Ask);
+          $("#volume").text("Bid Price: " + data.query.results.quote.Volume);
+          $("#high").text("Bid Price: " + data.query.results.quote.HighLimit);
+          $("#low").text("Bid Price: " + data.query.results.quote.LowLimit);
 
-        /**
-        * data loader for data set data
-        */
-        "dataLoader": {
-          "url": "http://download.finance.yahoo.com/d/quotes.csv?s=aapl&f=sl1d1t1c1ohgv&e=.csv",
-          "format": "csv",
-          "showCurtain": true,
-          "showErrors": true,
-          "async": true,
-          "reverse": true,
-          "delimiter": ",",
-          "useColumnNames": true
-        },
+          if(data.query.results.quote.PercentChange.indexOf("+") != -1){
 
-        /**
-        * data loader for events data
-        */
-        "eventDataLoader": {
-          "url": "http://download.finance.yahoo.com/d/quotes.csv?s=aapl&f=sl1d1t1c1ohgv&e=.csv",
-          "format": "csv",
-          "showCurtain": true,
-          "showErrors": true,
-          "async": true,
-          "reverse": true,
-          "delimiter": ",",
-          "useColumnNames": true,
-          "postProcess": function( data ) {
-            for ( var x in data ) {
-              switch ( data[ x ].Type ) {
-                case 'A':
-                var color = "#85CDE6";
-                break;
-                default:
-                var color = "#cccccc";
-                break;
-              }
-              data[ x ].Description = data[ x ].Description.replace( "Upgrade", "<strong style=\"color: #0c0\">Upgrade</strong>" ).replace( "Downgrade", "<strong style=\"color: #c00\">Downgrade</strong>" );
-              data[ x ] = {
-                "type": "pin",
-                "graph": "g1",
-                "backgroundColor": color,
-                "date": data[ x ].Date,
-                "text": data[ x ].Type,
-                "description": "<strong>" + data[ x ].Title + "</strong><br />" + data[ x ].Description
-              };
-            }
-            return data;
+          document.getElementById("chg").className = "greenText";
           }
-        }
+          else{
+          //alert(data.query.results.quote.PercentChange);
 
-        }, {
-        "title": "TXN",
-        "fieldMappings": [ {
-          "fromField": "Open",
-          "toField": "open"
-          }, {
-          "fromField": "High",
-          "toField": "high"
-          }, {
-          "fromField": "Low",
-          "toField": "low"
-          }, {
-          "fromField": "Close",
-          "toField": "close"
-          }, {
-          "fromField": "Volume",
-          "toField": "volume"
-        } ],
-        "compared": true,
-        "categoryField": "Date",
-        "dataLoader": {
-          "url": "http://download.finance.yahoo.com/d/quotes.csv?s=txn&f=sl1d1t1c1ohgv&e=.csv",
-          "format": "csv",
-          "showCurtain": true,
-          "showErrors": true,
-          "async": true,
-          "reverse": true,
-          "delimiter": ",",
-          "useColumnNames": true
-        }
-      } ],
-      "dataDateFormat": "YYYY-MM-DD",
+          document.getElementById("chg").className = "redText";
+          }
 
-      "panels": [ {
-        "title": "Value",
-        "percentHeight": 70,
+      }).fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        $("#result").text('Request failed: ' + err);
+        });
+  }
 
-        "stockGraphs": [ {
-          "type": "candlestick",
-          "id": "g1",
-          "openField": "open",
-          "closeField": "close",
-          "highField": "high",
-          "lowField": "low",
-          "valueField": "close",
-          "lineColor": "#fff",
-          "fillColors": "#fff",
-          "negativeLineColor": "#db4c3c",
-          "negativeFillColors": "#db4c3c",
-          "fillAlphas": 1,
-          "comparedGraphLineThickness": 2,
-          "columnWidth": 0.7,
-          "useDataSetColors": false,
-          "comparable": true,
-          "compareField": "close",
-          "showBalloon": false,
-          "proCandlesticks": true
-        } ],
+  function getStockPrice() {
+    var symbol = document.getElementById("symbol").value;
+    var callback = function(data) {
+      var price = data.query.results.quote.LastTradePriceOnly;
+      document.getElementById('price').value = price;
+    };
 
-        "stockLegend": {
-          "valueTextRegular": undefined,
-          "periodValueTextComparing": "[[percents.value.close]]%"
-        }
-
-      },
-
-      {
-        "title": "Volume",
-        "percentHeight": 30,
-        "marginTop": 1,
-        "columnWidth": 0.6,
-        "showCategoryAxis": false,
-
-        "stockGraphs": [ {
-          "valueField": "volume",
-          "openField": "open",
-          "type": "column",
-          "showBalloon": false,
-          "fillAlphas": 1,
-          "lineColor": "#fff",
-          "fillColors": "#fff",
-          "negativeLineColor": "#db4c3c",
-          "negativeFillColors": "#db4c3c",
-          "useDataSetColors": false
-        } ],
-
-        "stockLegend": {
-          "markerType": "none",
-          "markerSize": 0,
-          "labelText": "",
-          "periodValueTextRegular": "[[value.close]]"
-        },
-
-        "valueAxes": [ {
-          "usePrefixes": true
-        } ]
-      }
-      ],
-
-      "panelsSettings": {
-        //    "color": "#fff",
-        "plotAreaFillColors": "#333",
-        "plotAreaFillAlphas": 1,
-        "marginLeft": 60,
-        "marginTop": 5,
-        "marginBottom": 5
-      },
-
-      "chartScrollbarSettings": {
-        "graph": "g1",
-        "graphType": "line",
-        "usePeriod": "WW",
-        "backgroundColor": "#333",
-        "graphFillColor": "#666",
-        "graphFillAlpha": 0.5,
-        "gridColor": "#555",
-        "gridAlpha": 1,
-        "selectedBackgroundColor": "#444",
-        "selectedGraphFillAlpha": 1
-      },
-
-      "categoryAxesSettings": {
-        "equalSpacing": true,
-        "gridColor": "#555",
-        "gridAlpha": 1
-      },
-
-      "valueAxesSettings": {
-        "gridColor": "#555",
-        "gridAlpha": 1,
-        "inside": false,
-        "showLastLabel": true
-      },
-
-      "chartCursorSettings": {
-      "pan": true,
-      "valueLineEnabled": true,
-      "valueLineBalloonEnabled": true
-      },
-
-      "legendSettings": {
-      //"color": "#fff"
-      },
-
-      "stockEventsSettings": {
-      "showAt": "high",
-      "type": "pin"
-      },
-
-      "balloon": {
-      "textAlign": "left",
-      "offsetY": 10
-      },
-
-      "periodSelector": {
-      "position": "bottom",
-      "periods": [ {
-      "period": "DD",
-      "count": 10,
-      "label": "10D"
-      }, {
-      "period": "MM",
-      "count": 1,
-      "label": "1M"
-      }, {
-      "period": "MM",
-      "count": 6,
-      "label": "6M"
-      }, {
-      "period": "YYYY",
-      "count": 1,
-      "label": "1Y"
-      }, {
-      "period": "YYYY",
-      "count": 2,
-      "selected": true,
-      "label": "2Y"
-      },
-      /* {
-      "period": "YTD",
-      "label": "YTD"
-      },*/
-      {
-      "period": "MAX",
-      "label": "MAX"
-      }
-      ]
-      }
-      } );
-    </script>
-
-    <!-- HTML -->
-    <div id="chartdiv"></div>
+    var url = 'http://query.yahooapis.com/v1/public/yql';
+    // this is the lovely YQL query (html encoded) which lets us get the stock price:
+    // select * from html where url="http://finance.yahoo.com/q?s=goog" and xpath='//span[@id="yfs_l10_goog"]'
+    //var data = "q=select from html where url=http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D" + symbol + "%22%20and%20xpath%3D'%2F%2Fspan%5B%40id%3D%22yfs_l10_" + symbol + "%22%5D'&format=json";
+    var data = 'q=select * from yahoo.finance.quotes where symbol in ("' + symbol + '")&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys';
+    $.getJSON(url, data, callback);
+  }
+</script>
+  <div id="chartdiv">
+    Symbol: <input id="symbol" type="text" value=""/> <input type="button" value="Click me" onclick="getStockPrice()"/>
+    <br/>
+    Price: <input id="price" type="text" value="" readonly="readOnly" disabled/>
+  </div>
   </body>
 </html>

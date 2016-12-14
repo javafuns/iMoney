@@ -4,6 +4,7 @@
     <title>iMoney - Monthly Analytics</title>
     <script src="js/Chart.bundle.js"></script>
     <script src="js/utils.js"></script>
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
     <style>
       canvas {
         -moz-user-select: none;
@@ -42,6 +43,13 @@
             background: pink;
             text-decoration: none;
         }
+
+        #stockdiv {
+          width : 90%;
+          margin-top: 30px;
+          margin-left: 50px;
+          margin-right: 50px;
+        }
     </style>
     <script type="text/javascript">
         function switchTab(tabIdx, divIdx) {
@@ -58,10 +66,31 @@
                 }
             }
         }
+
+      // Stock Inquiry
+      function getStockPrice() {
+        var symbol = document.getElementById("symbol").value;
+        var callback = function(data) {
+          var price = data.query.results.quote.LastTradePriceOnly || "No Data";
+          document.getElementById('price').value = price;
+        };
+
+        var url = 'http://query.yahooapis.com/v1/public/yql';
+        // this is the lovely YQL query (html encoded) which lets us get the stock price:
+        // select * from html where url="http://finance.yahoo.com/q?s=goog" and xpath='//span[@id="yfs_l10_goog"]'
+        //var data = "q=select from html where url=http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D" + symbol + "%22%20and%20xpath%3D'%2F%2Fspan%5B%40id%3D%22yfs_l10_" + symbol + "%22%5D'&format=json";
+        var data = 'q=select * from yahoo.finance.quotes where symbol in ("' + symbol + '")&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys';
+        $.getJSON(url, data, callback);
+      }
     </script>
 </head>
     
 <body>
+  <div id="stockdiv">
+    Symbol: <input id="symbol" type="text" value="" tabindex="1"/>
+    Price : <input id="price" type="text" value="" readonly="readOnly" disabled/>
+    <input type="button" value="Click me" tabindex="2" onclick="getStockPrice()"/>
+  </div>
   <div style="margin-top: 30px; margin-left: 50px; margin-right: 50px; font-size: 15px;">Be patient, loading data and paint ......</div>
   <div id="tabContainer">
     <ul>
@@ -194,7 +223,6 @@ function getChartData(chartType, rawData) {
     };
   else alert("Undefined Chart Type");
 };
-
 </script>
   </body>
 </html>
