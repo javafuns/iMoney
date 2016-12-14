@@ -11,3 +11,11 @@ How to build docker image in google cloud shell:
 5. kubectl run imoney --image=gcr.io/guangquanzhang/imoney --port=8080
 6. kubectl expose deployment imoney --type="LoadBalancer"
 7. gcloud beta sql connect imoney-db --user=root to connect mysql instance
+
+Deployment UI:
+1. gcloud config set compute/zone [asia-east1-a]
+2. gcloud container clusters describe [cluster-1]
+   endpoint: 104.155.218.230
+   password: *******
+   username: admin
+3. https://104.155.218.230/ui
