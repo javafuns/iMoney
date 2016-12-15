@@ -28,7 +28,7 @@ passport.deserializeUser(function (user, done) {
 passport.use(new GithubStrategy({
     clientID: "b5c4c9e5056ab3d54a69",
     clientSecret: "f915eb5b6fdbf444e6cf084dc8fb920bf8967000",
-    callbackURL: "http://104.155.191.186:8080/auth/callback"
+    callbackURL: "http://104.155.218.230:8080/auth/callback"
     }, function(accessToken, refreshToken, profile, done) {
          done(null, profile);
        }
@@ -55,7 +55,7 @@ var connection  = require('express-myconnection'),
 app.use(
 
     connection(mysql,{
-        host     : '104.155.152.73',
+        host     : '104.199.183.153',
         user     : 'root',
         password : 'imoney',
         database : 'imoney',
