@@ -12,15 +12,23 @@ app.set('views','./public/views');
 app.set('view engine','ejs');
 
 app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public/views')));
 app.use(bodyParser.urlencoded({ extended: true })); //support x-www-form-urlencoded
 app.use(bodyParser.json());
 app.use(expressValidator());
 
+passport.serializeUser(function (user, done) {
+    done(null, user);
+});
+passport.deserializeUser(function (user, done) {
+    done(null, user);
+});
+
 passport.use(new GithubStrategy({
     clientID: "b5c4c9e5056ab3d54a69",
     clientSecret: "f915eb5b6fdbf444e6cf084dc8fb920bf8967000",
-    callbackURL: "http://104.155.191.186/auth/callback"
+    callbackURL: "http://104.199.163.36:8080/auth/callback"
     }, function(accessToken, refreshToken, profile, done) {
          done(null, profile);
        }
@@ -29,13 +37,16 @@ passport.use(new GithubStrategy({
 app.all('/auth',
     passport.authenticate("github", {scope: "email"}));
 
-app.all('/auth',
-    passport.authenticate("github", {scope: "email"}));
 app.get("/auth/callback",
     passport.authenticate("github", {
              successRedirect: '/',
-             failureRedirect: '/auth'
+             failureRedirect: '/error'
    }));
+
+app.get("/error",
+   function (req, res) {
+     res.send("Authorization Failure.");
+  });
 
 /*MySql connection*/
 var connection  = require('express-myconnection'),
@@ -44,9 +55,9 @@ var connection  = require('express-myconnection'),
 app.use(
 
     connection(mysql,{
-        host     : '104.155.152.73',
+        host     : '104.199.183.153',
         user     : 'root',
-        password : 'imoney',
+        password : 'root',
         database : 'imoney',
         debug    : false //set true if you wanna see debug logger
     },'request')
