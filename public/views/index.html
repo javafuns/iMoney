@@ -31,6 +31,29 @@
         padding: 15px;
         margin: 5px;
       }
+
+      p {
+        #font-family: Times New Roman;
+        font-size: 12pt;
+        text-align: left;
+        position: relative;
+        #margin-left: 10pt;
+        #margin-right: 10pt;
+        #position: absolute;
+        margin-top: 1pt;
+        color: black;
+        #background-color: aliceblue;
+        text-indent: 10pt;
+      }
+      p:first-letter {
+        text-transform: capitalize;
+        color: Blue;
+        font-size: 200%;
+        font-weight: bold;
+        padding-left: 25px;
+        position: relative;
+        margin-left: -26px;
+      }
     </style>
 </head>
 
@@ -38,19 +61,25 @@
   <div id="mydiv">
     <div id="descdiv">
       <h1>Introduction:</h1>
-      <div>iMoney application is composed of 3 services, which are listed and described below. It is built on Node.js, packaged as a docker image, deployed and run in Google Container Engine.</div>
+      <div>
+        <p>iMoney application is composed of 3 services, which are listed and described below.<p/>
+        <p>It is built on Node.js, packaged as a docker image, deployed and run in Google Container Engine.</p>
+      </div>
     </div>
     <div id="costdiv">
       <h1>Cost Management</h1>
-      <div>Record your cost in <a href="/api/costRecord">Cost Management</a></div>
+      <div><p>Record your cost in <a href="/api/costRecord">Cost Management</a>.</p></div>
     </div>
     <div id="analyticsdiv">
       <h1>Cost Analytics:</h1>
-      <div>Based on cost management service, we generate a consumption report, go <a href="/chart.html">Cost Analytics</a></div>
+      <div><p>Based on cost management service, we generate a consumption report with Bar, Line, Pie charts, go <a href="/chart.html">Cost Analytics</a>.</p></div>
     </div>
     <div id="stockdiv">
       <h1>Stock Inquiry:</h1>
-      <div>Stock Inquiry service is embeded in <a href="/chart.html">Cost Analytics</a></div>
+      <div>
+        <p>Stock Inquiry service is embeded in <a href="/chart.html">Cost Analytics</a>. You can query a stock's latest Last Trade Price.</p>
+        <p>Technologies: Yahoo Financial API and JQuery</p>
+      </div>
     </div>
   </div>
 </body>
