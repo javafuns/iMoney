@@ -28,7 +28,7 @@ passport.deserializeUser(function (user, done) {
 passport.use(new GithubStrategy({
     clientID: "b5c4c9e5056ab3d54a69",
     clientSecret: "f915eb5b6fdbf444e6cf084dc8fb920bf8967000",
-    callbackURL: "http://104.155.218.230:8080/auth/callback"
+    callbackURL: "http://104.199.163.36:8080/auth/callback"
     }, function(accessToken, refreshToken, profile, done) {
          done(null, profile);
        }
@@ -57,7 +57,7 @@ app.use(
     connection(mysql,{
         host     : '104.199.183.153',
         user     : 'root',
-        password : 'imoney',
+        password : 'root',
         database : 'imoney',
         debug    : false //set true if you wanna see debug logger
     },'request')
