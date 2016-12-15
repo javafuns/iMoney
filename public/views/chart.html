@@ -121,7 +121,10 @@
   </div>
 
 <script>
-window.onload = clickTab('1', "bar");
+  var barChart = drawChart("1", "bar");
+  var lineChart = drawChart("2", "line");
+  var pieChart = drawChart("3", "pie");
+  clickTab('1', "bar");
 
 function clickTab(index, ct) {
   var url = window.location.href;
@@ -133,107 +136,135 @@ function clickTab(index, ct) {
 
   xmlHttp.onreadystatechange = function() { 
     if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-      chartNow(index, ct, xmlHttp.responseText);
+      updateChartNow(index, ct, xmlHttp.responseText);
   }
   xmlHttp.open("GET", newURL, true); // true for asynchronous 
   xmlHttp.send(null);
 }
 
-function chartNow(index, ct, rawData) {
-	var ctx = document.getElementById("myChart" + index);
-  var chartData = getChartData(ct, rawData);
-	var myChart = new Chart(ctx, {
-	    type: ct,
-	    data: chartData,
-	    options: {
-		scales: {
-		    yAxes: [{
-			ticks: {
-			    beginAtZero:true
-			}
-		    }]
-		}
-	    }
-	});
-};
+function updateChartNow(index, chartType, rawData) {
+  var newData = rawData.split(",");
+  for(var i=0; i<newData.length; i++) { newData[i] = parseInt(newData[i], 10); }
+  if ("bar" == chartType) {
+    barChart.data.datasets[0].data = newData;
+    barChart.update();
+  } else if ("line" == chartType) {
+    lineChart.data.datasets[0].data = newData;
+    lineChart.update();
+  } else if ("pie" == chartType) {
+    pieChart.data.datasets[0].data = newData;
+    pieChart.update();
+  } else {
+    alert("Error on updating chart - This chart type is not supported yet!");
+  }
+}
 
-function getChartData(chartType, rawData) {
-  var rawDataArray = rawData.split(",");
-  for(var i=0; i<rawDataArray.length; i++) { rawDataArray[i] = parseInt(rawDataArray[i], 10); }
-  if ("bar" == chartType)
-    return {
-      labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      datasets: [{
-        label: 'Cost per Month',
-        data: rawDataArray,
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        borderWidth: 1
-      }]
-    };
-  else if ("line" == chartType)
-    return {
-      labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      datasets: [
-      {
-        label: "Cost per Month",
-        fill: false,
-        lineTension: 0.1,
-        backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: "rgba(75,192,192,1)",
-        pointBackgroundColor: "#fff",
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: "rgba(75,192,192,1)",
-        pointHoverBorderColor: "rgba(220,220,220,1)",
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data: rawDataArray,
-        spanGaps: false,
-      }
-      ]
-    };
-  else if ("pie" == chartType)
-    return {
-      labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      datasets: [{
-        data: rawDataArray,
-        backgroundColor: [
-        "#FF6384",
-        "#36A2EB",
-        "#006384",
-        "#FF2304",
-        "#03F0FF",
-        "#0F22EB",
-        "#AAA2EB",
-        "#39AA0B",
-        "#F06004",
-        "#99A20F",
-        "#FFAFFB",
-        "#FFCE56"
-        ],
-        hoverBackgroundColor: [
-        "#FF6384",
-        "#36A2EB",
-        "#FF6384",
-        "#FF2304",
-        "#F36384",
-        "#3EA2EB",
-        "#AAA2EB",
-        "#39A2EB",
-        "#F06384",
-        "#E0A2EB",
-        "#3FA2EB",
-        "#FFCE56"
-        ]
-      }]
-    };
-  else alert("Undefined Chart Type");
+function drawChart(index, chartType) {
+	var ctx = document.getElementById("myChart" + index);
+  if ("bar" == chartType) {
+    return new Chart(ctx, {
+	      type: "bar",
+        data: {
+          labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+          datasets: [{
+            label: 'Cost per Month',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderWidth: 1
+          }]
+        },
+	      options: {
+          scales: {
+		        yAxes: [{
+			        ticks: { beginAtZero:true }
+		        }]
+          }
+	      }
+	  });
+  } else if ("line" == chartType) {
+    return new Chart(ctx, {
+	      type: "line",
+        data: {
+          labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+          datasets: [{
+            label: "Cost per Month",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            spanGaps: false,
+          }]
+        },
+	      options: {
+          scales: {
+		        yAxes: [{
+			        ticks: { beginAtZero:true }
+		        }]
+          }
+	      }
+	  });
+  } else if ("pie" == chartType) {
+    return new Chart(ctx, {
+	      type: "pie",
+        data: {
+          labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+          datasets: [{
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            backgroundColor: [
+              "#FF6384",
+              "#36A2EB",
+              "#006384",
+              "#FF2304",
+              "#03F0FF",
+              "#0F22EB",
+              "#AAA2EB",
+              "#39AA0B",
+              "#F06004",
+              "#99A20F",
+              "#FFAFFB",
+              "#FFCE56"
+            ],
+            hoverBackgroundColor: [
+              "#FF6384",
+              "#36A2EB",
+              "#FF6384",
+              "#FF2304",
+              "#F36384",
+              "#3EA2EB",
+              "#AAA2EB",
+              "#39A2EB",
+              "#F06384",
+              "#E0A2EB",
+              "#3FA2EB",
+              "#FFCE56"
+            ]
+          }]
+        },
+	      options: {
+          scales: {
+		        yAxes: [{
+			        ticks: { beginAtZero:true }
+		        }]
+          }
+	      }
+	  });
+  } else {
+    alert("Undefined Chart Type");
+  }
 };
 </script>
   </body>
