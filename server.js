@@ -2,6 +2,8 @@ var express  = require('express'),
     path     = require('path'),
     bodyParser = require('body-parser'),
     app = express(),
+    passport = require('passport'),
+    GithubStrategy = require('passport-github').Strategy,
     expressValidator = require('express-validator');
 
 
@@ -9,10 +11,31 @@ var express  = require('express'),
 app.set('views','./public/views');
 app.set('view engine','ejs');
 
+app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'public/views')));
 app.use(bodyParser.urlencoded({ extended: true })); //support x-www-form-urlencoded
 app.use(bodyParser.json());
 app.use(expressValidator());
+
+passport.use(new GithubStrategy({
+    clientID: "b5c4c9e5056ab3d54a69",
+    clientSecret: "f915eb5b6fdbf444e6cf084dc8fb920bf8967000",
+    callbackURL: "http://104.155.191.186/auth/callback"
+    }, function(accessToken, refreshToken, profile, done) {
+         done(null, profile);
+       }
+    )
+);
+app.all('/auth',
+    passport.authenticate("github", {scope: "email"}));
+
+app.all('/auth',
+    passport.authenticate("github", {scope: "email"}));
+app.get("/auth/callback",
+    passport.authenticate("github", {
+             successRedirect: '/',
+             failureRedirect: '/auth'
+   }));
 
 /*MySql connection*/
 var connection  = require('express-myconnection'),
