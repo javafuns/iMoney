@@ -1,6 +1,6 @@
-After clone the source, run:
+How to build and run on local PC:
 1. npm install - to download all dependent modules.
-
+2. node server.js
 
 How to build docker image in google cloud shell:
 1. git clone https://github.com/javafuns/iMoney.git
